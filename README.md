@@ -2,7 +2,7 @@
 tiger optimizer for tiger
 
 ## feature
-when do trainning both on float16 parameter and float16 gradient,round-off error is a serious risk.
+When do trainning both on float16 parameter and float16 gradient,round-off error is a serious risk.
 This implementation method of tiger optimizer can help you to avoid round-off error if abs(parameter)/1000 > learning_rate * abs(gradient) so that you can do trainning both on float16 parameter and float16 gradient.
 
 
