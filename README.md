@@ -2,7 +2,7 @@
 tiger optimizer for tiger
 
 ## feature
-This implementation method if tiger can help you to avoid round-off error if abs(parameter)/1000 > learning_rate * abs(gradient)  so that you can trainning one both float16 parameter and float16 gradient
+This implementation method of tiger optimizer can help you to avoid round-off error if abs(parameter)/1000 > learning_rate * abs(gradient) so that you can trainning one both float16 parameter and float16 gradient
 
 
 ## Citation
