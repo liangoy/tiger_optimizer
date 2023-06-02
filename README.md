@@ -1,5 +1,5 @@
 ## Tiger
-tiger optimizer for tiger
+tiger optimizer for torch
 
 ## feature
 When do trainning both on float16 parameter and float16 gradient,round-off error is a serious risk.
