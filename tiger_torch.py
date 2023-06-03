@@ -21,7 +21,7 @@ class Tiger(Optimizer):
       raise ValueError('Invalid beta parameter at index 0: {}'.format(beta))
     defaults = dict(lr=lr, beta=beta, weight_decay=weight_decay)
     super().__init__(params, defaults)
-
+    
   @torch.no_grad()
   def step(self, closure=None):
     """Performs a single optimization step.
@@ -44,11 +44,15 @@ class Tiger(Optimizer):
         state = self.state[p]
         if len(state) == 0:
           state['exp_avg'] = torch.zeros_like(p)
+                
         exp_avg = state['exp_avg']
         beta=group['beta']
         exp_avg.mul_(beta).add_(p.grad, alpha=1 - beta)
         
-        update = torch.sign(exp_avg)+group['weight_decay']*p.data
+        update = torch.sign(exp_avg)
+        update.mul_( (exp_avg.abs()>group['lr']/10).type_as(update) )
+        update.add_(p.data,alpha=group['weight_decay'])
+        
         p.add_(update,alpha=-group['lr'])
 
     return loss
