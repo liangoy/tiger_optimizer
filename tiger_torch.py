@@ -20,9 +20,10 @@ class Tiger(Optimizer):
             raise ValueError('Invalid learning rate: {}'.format(lr))
         if not 0.0 <= beta < 1.0:
             raise ValueError('Invalid beta parameter at index 0: {}'.format(beta))
-        defaults = dict(lr=lr, beta=beta, weight_decay=weight_decay+1e-7)
-        defaults['steps']=0
+        defaults = dict(lr=lr, beta=beta, weight_decay=weight_decay + 1e-7)
+        defaults['steps'] = 0
         super().__init__(params, defaults)
+
     @torch.no_grad()
     def step(self, closure=None):
         """Performs a single optimization step.
@@ -39,9 +40,9 @@ class Tiger(Optimizer):
 
         for group in self.param_groups:
             beta = group['beta']
-            lr=group['lr']
-            weight_decay=group['weight_decay']
-            steps=group['steps']
+            lr = group['lr']
+            weight_decay = group['weight_decay']
+            steps = group['steps']
             for p in group['params']:
                 if p.grad is None:
                     continue
@@ -51,12 +52,11 @@ class Tiger(Optimizer):
                 if len(state) == 0:
                     state['exp_avg'] = torch.zeros_like(p)
 
-
                 exp_avg = state['exp_avg']
                 exp_avg.mul_(beta).add_(p.grad, alpha=1 - beta)
 
-                if steps % round(1/weight_decay)==0:
-                    p.mul_(1-lr)
+                if steps % round(1 / weight_decay) == 0:
+                    p.mul_(1 - lr)
                 p.add_(torch.sign(exp_avg), alpha=-lr)
-            group['steps']+=1
+            group['steps'] += 1
         return loss
