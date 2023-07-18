@@ -38,6 +38,10 @@ class Tiger(Optimizer):
                 loss = closure()
 
         for group in self.param_groups:
+            beta = group['beta']
+            lr=group['lr']
+            weight_decay=group['weight_decay']
+            steps=group['steps']
             for p in group['params']:
                 if p.grad is None:
                     continue
@@ -49,11 +53,10 @@ class Tiger(Optimizer):
 
 
                 exp_avg = state['exp_avg']
-                beta = group['beta']
                 exp_avg.mul_(beta).add_(p.grad, alpha=1 - beta)
 
-                if group['steps'] % round(1/group['weight_decay'])==0:
-                    p.mul_(1-group['lr'])
-                p.add_(torch.sign(exp_avg), alpha=-group['lr'])
+                if steps % round(1/weight_decay)==0:
+                    p.mul_(1-lr)
+                p.add_(torch.sign(exp_avg), alpha=-lr)
             group['steps']+=1
         return loss
