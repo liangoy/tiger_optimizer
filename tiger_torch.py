@@ -20,7 +20,7 @@ class Tiger(Optimizer):
             raise ValueError('Invalid learning rate: {}'.format(lr))
         if not 0.0 <= beta < 1.0:
             raise ValueError('Invalid beta parameter at index 0: {}'.format(beta))
-        defaults = dict(lr=lr, beta=beta, weight_decay=weight_decay)
+        defaults = dict(lr=lr, beta=beta, weight_decay=weight_decay+1e-7)
         defaults['steps']=0
         super().__init__(params, defaults)
     @torch.no_grad()
@@ -52,7 +52,7 @@ class Tiger(Optimizer):
                 beta = group['beta']
                 exp_avg.mul_(beta).add_(p.grad, alpha=1 - beta)
 
-                if group['steps'] % int(1/group['weight_decay'])==0:
+                if group['steps'] % round(1/group['weight_decay'])==0:
                     p.mul_(1-group['lr'])
                 p.add_(torch.sign(exp_avg), alpha=-group['lr'])
             group['steps']+=1
